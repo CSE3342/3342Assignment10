@@ -1,0 +1,19 @@
+version: '2'
+services:
+  php-apache:
+    container_name: php-apache
+    image: toozick/php-apache:v1
+    ports:
+      - "8080:80"
+    environment:
+      XDEBUG_CONFIG: remote_host=<do_not_touch>
+      CI_ENV: development
+    volumes:
+      - ./application:/var/www/html/application
+      - ./docker_files:/var/www/html/docker_files
+
+      - ./index.php:/var/www/html/index.php
+      - ./phpinfo.php:/var/www/html/phpinfo.php
+
+      - ./.htaccess:/var/www/html/.htaccess
+      - ./python:/var/www/html/python
