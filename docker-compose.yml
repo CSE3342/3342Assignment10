@@ -9,11 +9,4 @@ services:
       XDEBUG_CONFIG: remote_host=<do_not_touch>
       CI_ENV: development
     volumes:
-      - ./application:/var/www/html/application
-      - ./docker_files:/var/www/html/docker_files
-
-      - ./index.php:/var/www/html/index.php
-      - ./phpinfo.php:/var/www/html/phpinfo.php
-
-      - ./.htaccess:/var/www/html/.htaccess
-      - ./python:/var/www/html/python
+      - ./:/var/www/html/
