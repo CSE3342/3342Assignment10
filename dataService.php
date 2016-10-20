@@ -11,7 +11,7 @@ class Database {
     private $rows = array();
 
     public function __construct () {
-        $valid_keys = array('id','key','val');
+        $valid_keys = array('id','key','val','clear');
         $invalid_keys = array();
         foreach($_GET as $key => $value){
             if(!in_array($key,$valid_keys)){
@@ -19,11 +19,18 @@ class Database {
             }
         }
         if(!empty($invalid_keys)){
-            throw new Exception('Invalid keys: ' . implode(', ',$invalid_keys) . ', expecting keys: ' . implode(', ',$valid_keys));
+            throw new Exception('Invalid keys: ' . implode(', ',$invalid_keys) .
+                ', expecting keys: ' . implode(', ',$valid_keys));
         }
         $this->id = !empty($_GET['id']) ? $_GET['id'] : null;
         $this->key = !empty($_GET['key']) ? $_GET['key'] : null;
         $this->val = !empty($_GET['val']) ? $_GET['val'] : null;
+
+        //Clear database
+        if(!empty($_GET['clear'])){
+            $this->_clear_database();
+            exit;
+        }
 
         //Fetch previous database
         $this->_fetch_database();
@@ -60,6 +67,10 @@ class Database {
             throw new Exception('ID & key is required.');
         }
     }
+    private function _clear_database(){
+        $this->rows = array();
+        $this->_save_database();
+    }
     private function _fetch_database(){
         if(file_exists($this->database_name)){
             $this->rows = json_decode(file_get_contents($this->database_name), true);
@@ -86,7 +97,8 @@ class Database {
                 }
             }
         }
-        throw new Exception('Could not find a row with ID #' . $this->id . ' and key `' . $this->key . '`.');
+        throw new Exception('Could not find a row with ID #' . $this->id .
+            ' and key `' . $this->key . '`.');
     }
     private function _print_database(){
         return $this->_pretty_print(json_encode($this->rows));
