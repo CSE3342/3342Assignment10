@@ -26,6 +26,8 @@ class Database {
         $this->key = !empty($_GET['key']) ? $_GET['key'] : null;
         $this->val = !empty($_GET['val']) ? $_GET['val'] : null;
 
+        $this->_check_id();
+
         //Clear database
         if(!empty($_GET['clear'])){
             $this->_clear_database();
@@ -67,6 +69,11 @@ class Database {
             throw new Exception('ID & key is required.');
         }
     }
+    private function _check_id(){
+        if(!empty($this->id) && !preg_match('/[a-zA-Z][\w]*/',$this->id)){
+            throw new Exception('The ID can only be the letters a-z or A-Z.');
+        }
+    }
     private function _clear_database(){
         $this->rows = array();
         $this->_save_database();
@@ -93,7 +100,7 @@ class Database {
         foreach(array_reverse($this->rows) as $row){
             if($row['id'] == $this->id){
                 if($row['key'] == $this->key){
-                    return $row['id'] . ' ' .  $row['key'] . '=' . $row['val'];
+                    return json_encode($row);
                 }
             }
         }

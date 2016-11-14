@@ -2,7 +2,7 @@ version: '2'
 services:
   php-apache:
     container_name: php-apache
-    image: toozick/php-apache:v1
+    image: toozick/cse3342-php-apache:v1
     ports:
       - "8080:80"
     environment:
